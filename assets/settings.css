@@ -1,0 +1,222 @@
+/* Light and Dark Mode Images: section under Settings > Media. Loaded only on that screen. */
+.ldmi-intro {
+	max-width: 760px;
+	padding: 16px 18px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #fff;
+	scroll-margin-top: 48px;
+}
+
+.ldmi-intro > p {
+	margin-top: 0;
+}
+
+.ldmi-demo {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+}
+
+.ldmi-demo-screen {
+	margin: 0;
+	padding: 10px;
+	border: 1px solid #c3c4c7;
+	border-radius: 6px;
+	background: #f8fafc;
+	color: #1e293b;
+}
+
+.ldmi-demo-screen.is-dark {
+	border-color: #1e293b;
+	background: #111827;
+	color: #e2e8f0;
+}
+
+.ldmi-demo-art {
+	display: block;
+}
+
+.ldmi-demo-bar {
+	display: block;
+	height: 8px;
+	margin-bottom: 8px;
+	border-radius: 4px;
+	background: currentColor;
+	opacity: 0.15;
+}
+
+.ldmi-demo-image {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	aspect-ratio: 16 / 7;
+	border-radius: 4px;
+	background: #fff;
+	box-shadow: inset 0 0 0 1px #cbd5e1;
+}
+
+.ldmi-demo-image.is-dark {
+	background: #1f2937;
+	box-shadow: inset 0 0 0 1px #334155;
+}
+
+.ldmi-demo-image span {
+	width: 22%;
+	height: 38%;
+	border: 2px solid #2563eb;
+	border-radius: 3px;
+	background: #dbeafe;
+}
+
+.ldmi-demo-image.is-dark span {
+	border-color: #60a5fa;
+	background: #1e3a8a;
+}
+
+.ldmi-demo-lines {
+	display: block;
+	height: 18px;
+	margin-top: 8px;
+	background: repeating-linear-gradient(currentColor 0 3px, transparent 3px 8px);
+	opacity: 0.2;
+}
+
+.ldmi-demo-screen figcaption {
+	margin-top: 8px;
+	font-size: 13px;
+}
+
+.ldmi-demo-which {
+	display: inline-block;
+	margin-left: 4px;
+	padding: 0 8px;
+	border-radius: 999px;
+	background: rgba(37, 99, 235, 0.12);
+	color: #1d4ed8;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.is-dark .ldmi-demo-which {
+	background: rgba(96, 165, 250, 0.2);
+	color: #bfdbfe;
+}
+
+/* Base scheme as two choice cards. */
+.ldmi-base {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 10px;
+	max-width: 760px;
+}
+
+.form-table td fieldset label.ldmi-base-option,
+.ldmi-base-option {
+	display: flex;
+	margin: 0 !important;
+	align-items: center;
+	gap: 10px;
+	min-height: 44px;
+	padding: 10px 12px;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	background: #fff;
+	cursor: pointer;
+}
+
+.ldmi-base-option:has(input:checked) {
+	border-color: var(--wp-admin-theme-color, #3858e9);
+	box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #3858e9);
+}
+
+.ldmi-base-option:focus-within {
+	outline: 2px solid var(--wp-admin-theme-color, #3858e9);
+	outline-offset: 2px;
+}
+
+.ldmi-base-option input[type="radio"] {
+	margin: 0;
+}
+
+.ldmi-base-icon {
+	flex: none;
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+}
+
+.ldmi-base-option.is-light .ldmi-base-icon {
+	background: #fbbf24;
+	box-shadow: 0 0 0 3px #fef3c7;
+}
+
+.ldmi-base-option.is-dark .ldmi-base-icon {
+	background: radial-gradient(circle at 70% 30%, transparent 7px, #1e293b 7.5px);
+	box-shadow: 0 0 0 3px #e2e8f0;
+}
+
+/* Selector fields. */
+.ldmi-check {
+	display: block;
+	min-height: 1.4em;
+	margin-top: 4px;
+	font-size: 12px;
+}
+
+.ldmi-check.is-valid {
+	color: #007017;
+}
+
+.ldmi-check.is-invalid {
+	color: #b32d2e;
+	font-weight: 600;
+}
+
+.ldmi-selector[aria-invalid="true"] {
+	border-color: #d63638;
+	box-shadow: 0 0 0 1px #d63638;
+}
+
+.ldmi-examples {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin: 2px 0 6px;
+}
+
+.ldmi-examples[hidden] {
+	display: none;
+}
+
+.ldmi-examples-label {
+	color: #50575e;
+	font-size: 12px;
+}
+
+.ldmi-example code {
+	padding: 0;
+	background: none;
+	font-size: 12px;
+}
+
+@media (max-width: 782px) {
+	.ldmi-demo {
+		gap: 8px;
+	}
+
+	.ldmi-demo-screen {
+		padding: 6px;
+	}
+
+	.ldmi-demo-which {
+		display: block;
+		width: fit-content;
+		margin: 4px 0 0;
+	}
+
+	.ldmi-example.button {
+		min-height: 40px;
+	}
+}

@@ -28,14 +28,57 @@
 
 	function useMedia( id ) {
 		return wp.data.useSelect( function ( select ) {
-			return id ? select( 'core' ).getMedia( id ) : null;
+			// getEntityRecord instead of the getMedia shortcut, which is deprecated since WordPress 6.9.
+			return id ? select( 'core' ).getEntityRecord( 'postType', 'attachment', id ) : null;
 		}, [ id ] );
+	}
+
+	function size( media ) {
+		var d = media && media.media_details;
+		return d && d.width && d.height ? { w: d.width, h: d.height } : null;
+	}
+
+	function Tile( props ) {
+		return el(
+			'figure',
+			{ className: 'ldmi-tile is-' + props.scheme },
+			props.url
+				? el( 'img', { src: props.url, alt: '' } )
+				: el( 'span', { className: 'ldmi-tile-empty' }, props.empty || '' ),
+			el( 'figcaption', null, el( 'strong', null, props.mode ), el( 'span', null, props.what ) )
+		);
+	}
+
+	function Comparison( props ) {
+		var regular = props.regular;
+		var second = props.second;
+		var a = size( regular );
+		var b = size( second );
+		var notice = null;
+		if ( a && b ) {
+			var diff = Math.abs( a.w / a.h - b.w / b.h ) / ( a.w / a.h );
+			notice = diff > 0.02
+				? el( c.Notice, { status: 'warning', isDismissible: false, className: 'ldmi-ratio' },
+					( cfg.ratioWarning || '' ).replace( '%1$s', a.w + ' × ' + a.h ).replace( '%2$s', b.w + ' × ' + b.h ) )
+				: el( 'p', { className: 'ldmi-ratio-ok' }, el( 'span', { className: 'dashicons dashicons-yes', 'aria-hidden': 'true' } ), cfg.ratioOk );
+		}
+		return el(
+			Fragment,
+			null,
+			el(
+				'div',
+				{ className: 'ldmi-compare' },
+				el( Tile, { scheme: cfg.baseScheme, url: previewUrl( regular ), mode: cfg.baseLabel, what: cfg.regularImage, empty: cfg.noRegular } ),
+				el( Tile, { scheme: cfg.baseScheme === 'dark' ? 'light' : 'dark', url: previewUrl( second ), mode: cfg.altLabel, what: cfg.secondImage } )
+			),
+			notice
+		);
 	}
 
 	function Chooser( props ) {
 		var id = props.id || 0;
 		var media = useMedia( id );
-		var url = previewUrl( media );
+		var regular = useMedia( props.regularId || 0 );
 		return el(
 			be.MediaUploadCheck,
 			{ fallback: el( 'p', null, cfg.noPermission ) },
@@ -49,10 +92,14 @@
 					return el(
 						'div',
 						{ className: 'ldmi-chooser' },
-						url ? el( 'img', { src: url, alt: '', style: { maxWidth: '100%', height: 'auto', display: 'block', marginBottom: '8px' } } ) : null,
-						el( c.Button, { variant: 'secondary', onClick: r.open }, id ? cfg.replace : cfg.choose ),
-						id ? el( c.Button, { variant: 'link', isDestructive: true, onClick: function () { props.onChange( 0 ); }, style: { marginLeft: '8px' } }, cfg.remove ) : null,
-						el( 'p', { className: 'components-base-control__help', style: { marginTop: '8px' } }, cfg.help )
+						id ? el( Comparison, { regular: regular, second: media } ) : null,
+						el(
+							'div',
+							{ className: 'ldmi-actions' },
+							el( c.Button, { variant: 'secondary', onClick: r.open, __next40pxDefaultSize: true }, id ? cfg.replace : cfg.choose ),
+							id ? el( c.Button, { variant: 'link', isDestructive: true, onClick: function () { props.onChange( 0 ); } }, cfg.remove ) : null
+						),
+						el( 'p', { className: 'components-base-control__help ldmi-help' }, cfg.help )
 					);
 				}
 			} )
@@ -86,6 +133,7 @@
 						{ title: cfg.blockTitle, initialOpen: !! id },
 						el( Chooser, {
 							id: id,
+							regularId: props.attributes.id || 0,
 							onChange: function ( v ) {
 								props.setAttributes( { ldmiAltId: v || undefined } );
 							}
@@ -104,7 +152,7 @@
 			render: function () {
 				var state = wp.data.useSelect( function ( select ) {
 					var ed = select( 'core/editor' );
-					return ed ? { type: ed.getCurrentPostType(), meta: ed.getEditedPostAttribute( 'meta' ) } : { type: '', meta: null };
+					return ed ? { type: ed.getCurrentPostType(), meta: ed.getEditedPostAttribute( 'meta' ), featured: ed.getEditedPostAttribute( 'featured_media' ) } : { type: '', meta: null, featured: 0 };
 				}, [] );
 				var dispatch = wp.data.useDispatch( 'core/editor' );
 				if ( ! state.type || ( cfg.postTypes || [] ).indexOf( state.type ) === -1 || ! state.meta ) {
@@ -116,6 +164,7 @@
 					{ name: 'ldmi-featured', title: cfg.featuredTitle },
 					el( Chooser, {
 						id: id,
+						regularId: state.featured || 0,
 						onChange: function ( v ) {
 							var meta = {};
 							meta[ cfg.metaKey ] = v || 0;

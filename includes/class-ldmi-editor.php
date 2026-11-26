@@ -53,11 +53,21 @@ class LDMI_Editor {
 			'replace'       => __( 'Replace image', 'light-dark-mode-images' ),
 			'remove'        => __( 'Remove', 'light-dark-mode-images' ),
 			'noPermission'  => __( 'You need permission to upload files to choose an image.', 'light-dark-mode-images' ),
+			'baseLabel'     => $dark ? __( 'Light mode', 'light-dark-mode-images' ) : __( 'Dark mode', 'light-dark-mode-images' ),
+			'altLabel'      => $dark ? __( 'Dark mode', 'light-dark-mode-images' ) : __( 'Light mode', 'light-dark-mode-images' ),
+			'baseScheme'    => $dark ? 'light' : 'dark',
+			'regularImage'  => __( 'Regular image', 'light-dark-mode-images' ),
+			'secondImage'   => __( 'Second image', 'light-dark-mode-images' ),
+			'noRegular'     => __( 'No regular image yet', 'light-dark-mode-images' ),
+			/* translators: 1: size of the regular image, 2: size of the second image, both like "1200 × 675". */
+			'ratioWarning'  => __( 'The two images have different aspect ratios (%1$s and %2$s). The second image may look stretched or shift the layout; use the same proportions.', 'light-dark-mode-images' ),
+			'ratioOk'       => __( 'Same aspect ratio as the regular image.', 'light-dark-mode-images' ),
 		);
 	}
 
-	/** Script for the block editor (no build step, plain wp.* globals). */
+	/** Script and styles for the block editor (no build step, plain wp.* globals). */
 	public static function block_editor_assets() {
+		wp_enqueue_style( 'ldmi-editor', plugins_url( 'assets/editor.css', LDMI_FILE ), array(), LDMI_VERSION );
 		wp_enqueue_script(
 			'ldmi-editor',
 			plugins_url( 'assets/editor.js', LDMI_FILE ),
@@ -166,7 +176,9 @@ class LDMI_Editor {
 		// Style handle without a file, only for the preview image rule below.
 		wp_register_style( 'ldmi-metabox', false, array(), LDMI_VERSION );
 		wp_enqueue_style( 'ldmi-metabox' );
-		wp_add_inline_style( 'ldmi-metabox', '#ldmi-featured .ldmi-preview-image{max-width:100%;height:auto;display:block;margin-bottom:8px}' );
+		// The preview sits on a background of the scheme it is made for, so a dark image is judged on dark.
+		$swatch = 'dark' === LDMI_Settings::alt_scheme() ? '#111827' : '#f8fafc';
+		wp_add_inline_style( 'ldmi-metabox', '#ldmi-featured .ldmi-preview-image{max-width:100%;height:auto;display:block}#ldmi-featured .ldmi-preview:not(:empty){margin-bottom:8px;padding:6px;border:1px solid #c3c4c7;border-radius:4px;background:' . $swatch . '}' );
 		wp_enqueue_script( 'ldmi-metabox', plugins_url( 'assets/metabox.js', LDMI_FILE ), array( 'jquery' ), LDMI_VERSION, true );
 		wp_localize_script( 'ldmi-metabox', 'LDMI_BOX', self::labels() );
 	}

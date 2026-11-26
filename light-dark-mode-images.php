@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Light and Dark Mode Images
  * Description: Add a second version of the featured image and of Image blocks for the other color scheme. Visitors get the version that matches their light or dark mode.
- * Version: 0.1.1
+ * Version: 0.2.0
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Author: LW IT Solutions
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'LDMI_VERSION', '0.1.1' );
+define( 'LDMI_VERSION', '0.2.0' );
 define( 'LDMI_FILE', __FILE__ );
 
 require_once __DIR__ . '/includes/class-ldmi-settings.php';

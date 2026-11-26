@@ -4,7 +4,7 @@ Tags: dark mode, images, featured image, prefers-color-scheme, picture
 Requires at least: 6.5
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 0.1.1
+Stable tag: 0.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,16 @@ The regular images are shown as before. The block attribute stays in the content
 3. Settings under Settings > Media: base color scheme and optional selectors for a theme switch.
 
 == Changelog ==
+
+= 0.2.0 =
+* Settings > Media: two small example screens show which image visitors get in light and in dark mode, and follow the chosen base scheme right away.
+* The base scheme is chosen from two cards with a sun and a moon symbol.
+* The selector fields check the CSS syntax while typing and offer common selectors of theme switches with one click.
+* Block editor: the panels show the regular and the second image side by side on light and dark backgrounds.
+* Block editor: a warning appears when the two images have different aspect ratios.
+* Classic editor: the preview of the second image sits on a background of its color scheme.
+* The editor reads the images through getEntityRecord instead of the deprecated getMedia, so WordPress 6.9 and later log no deprecation notice.
+* The Settings link on the Plugins screen opens the plugin section directly. Front-end output is unchanged.
 
 = 0.1.1 =
 * The script for theme switches is loaded only on pages that contain an image with a second version.
