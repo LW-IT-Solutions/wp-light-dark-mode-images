@@ -111,12 +111,16 @@ class LDMI_Editor {
 		echo '<div class="ldmi-box">';
 		echo '<div class="ldmi-preview">';
 		if ( LDMI_Output::is_image( $id ) ) {
-			echo wp_get_attachment_image( $id, 'medium', false, array( 'style' => 'max-width:100%;height:auto;display:block;margin-bottom:8px' ) );
+			echo wp_kses_post( wp_get_attachment_image( $id, 'medium', false, array( 'class' => 'ldmi-preview-image' ) ) );
 		}
 		echo '</div>';
 		printf( '<input type="hidden" name="ldmi_alt_image_id" class="ldmi-id" value="%d">', (int) $id );
 		printf( '<button type="button" class="button ldmi-choose">%s</button> ', esc_html( $id ? $labels['replace'] : $labels['choose'] ) );
-		printf( '<button type="button" class="button-link button-link-delete ldmi-remove"%s>%s</button>', $id ? '' : ' hidden', esc_html( $labels['remove'] ) );
+		if ( $id ) {
+			printf( '<button type="button" class="button-link button-link-delete ldmi-remove">%s</button>', esc_html( $labels['remove'] ) );
+		} else {
+			printf( '<button type="button" class="button-link button-link-delete ldmi-remove" hidden>%s</button>', esc_html( $labels['remove'] ) );
+		}
 		echo '<p class="description">' . esc_html( $labels['help'] ) . '</p>';
 		echo '</div>';
 	}
@@ -159,6 +163,10 @@ class LDMI_Editor {
 			return;
 		}
 		wp_enqueue_media();
+		// Style handle without a file, only for the preview image rule below.
+		wp_register_style( 'ldmi-metabox', false, array(), LDMI_VERSION );
+		wp_enqueue_style( 'ldmi-metabox' );
+		wp_add_inline_style( 'ldmi-metabox', '#ldmi-featured .ldmi-preview-image{max-width:100%;height:auto;display:block;margin-bottom:8px}' );
 		wp_enqueue_script( 'ldmi-metabox', plugins_url( 'assets/metabox.js', LDMI_FILE ), array( 'jquery' ), LDMI_VERSION, true );
 		wp_localize_script( 'ldmi-metabox', 'LDMI_BOX', self::labels() );
 	}

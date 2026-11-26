@@ -24,7 +24,7 @@
 					var a = frame.state().get( 'selection' ).first().toJSON();
 					var url = a.sizes && a.sizes.medium ? a.sizes.medium.url : a.url;
 					input.val( a.id );
-					preview.empty().append( $( '<img>', { src: url, alt: '' } ).css( { maxWidth: '100%', height: 'auto', display: 'block', marginBottom: '8px' } ) );
+					preview.empty().append( $( '<img>', { src: url, alt: '', 'class': 'ldmi-preview-image' } ) );
 					choose.text( t.replace );
 					remove.prop( 'hidden', false );
 				} );

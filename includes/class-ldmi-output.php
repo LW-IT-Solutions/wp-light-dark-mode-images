@@ -21,7 +21,6 @@ class LDMI_Output {
 		add_action( 'init', array( __CLASS__, 'register_meta' ) );
 		add_filter( 'post_thumbnail_html', array( __CLASS__, 'featured_image' ), 20, 5 );
 		add_filter( 'render_block_core/image', array( __CLASS__, 'image_block' ), 20, 2 );
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'toggle_script' ) );
 	}
 
 	/** Post meta for the second featured image, editable through the REST API. */
@@ -104,14 +103,20 @@ class LDMI_Output {
 		if ( '' === $source || false !== stripos( $html, '<picture' ) ) {
 			return $html;
 		}
-		return (string) preg_replace_callback(
+		$count = 0;
+		$out   = (string) preg_replace_callback(
 			'/<img\b[^>]*>/i',
 			function ( $m ) use ( $source ) {
 				return '<picture class="ldmi-picture">' . $source . $m[0] . '</picture>';
 			},
 			$html,
-			1
+			1,
+			$count
 		);
+		if ( $count ) {
+			self::toggle_script();
+		}
+		return $out;
 	}
 
 	/**
@@ -165,8 +170,14 @@ class LDMI_Output {
 		return self::wrap( $content, self::source_tag( $alt, $size, self::img_sizes( $content ) ) );
 	}
 
-	/** Small script that follows a theme's own light/dark switch, only when selectors are set. */
+	/**
+	 * Small script that follows a theme's own light/dark switch. Added to the footer of a front-end page
+	 * only when selectors are set and the page contains at least one image with a second version.
+	 */
 	public static function toggle_script() {
+		if ( is_admin() || wp_script_is( 'ldmi-toggle', 'enqueued' ) ) {
+			return;
+		}
 		$s = LDMI_Settings::get();
 		if ( '' === $s['dark_selector'] && '' === $s['light_selector'] ) {
 			return;

@@ -4,7 +4,7 @@ Tags: dark mode, images, featured image, prefers-color-scheme, picture
 Requires at least: 6.5
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,7 +20,7 @@ matches the visitor's light or dark mode, without JavaScript and without loading
 * **Image block:** a panel "Image for dark mode" in the block settings.
 * **Output:** a standard `<picture>` element with a `<source media="(prefers-color-scheme: dark)">` and the regular `<img>` as fallback, including `srcset`, `sizes`, `width` and `height` of the second image.
 * **Either direction:** if the site is dark by default, switch the setting and add light versions instead.
-* **Theme switches:** if the theme has its own light/dark toggle, enter the CSS selectors it sets (for example `html.dark` and `html.light`). A small script then follows the visitor's choice, also for content loaded later. Without selectors no script is loaded.
+* **Theme switches:** if the theme has its own light/dark toggle, enter the CSS selectors it sets (for example `html.dark` and `html.light`). A small script then follows the visitor's choice, also for images added to the page later. It is loaded only on pages that are output with at least one image that has a second version; without selectors no script is loaded.
 
 Posts without a second image are output exactly as before.
 
@@ -62,6 +62,10 @@ The regular images are shown as before. The block attribute stays in the content
 3. Settings under Settings > Media: base color scheme and optional selectors for a theme switch.
 
 == Changelog ==
+
+= 0.1.1 =
+* The script for theme switches is loaded only on pages that contain an image with a second version.
+* The classic editor meta box prints its preview through wp_kses_post() and styles it with a class instead of inline styles.
 
 = 0.1.0 =
 * First release: second image for featured images and Image blocks, light or dark as the base scheme, optional theme switch selectors.
