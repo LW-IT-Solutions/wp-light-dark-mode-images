@@ -49,6 +49,47 @@
 		);
 	}
 
+	/*
+	 * Wipe: both images on top of each other, a slider reveals the second one from the right.
+	 * The native range input works with the arrow keys; each side keeps the background of its scheme.
+	 */
+	function Wipe( props ) {
+		var state = wp.element.useState( 50 );
+		var pos = state[ 0 ];
+		var setPos = state[ 1 ];
+		var id = 'ldmi-wipe-' + props.uid;
+		var altScheme = cfg.baseScheme === 'dark' ? 'light' : 'dark';
+		return el(
+			'div',
+			{ className: 'ldmi-wipe is-base-' + cfg.baseScheme + ' is-alt-' + altScheme, style: { '--ldmi-pos': pos + '%' } },
+			el(
+				'div',
+				{ className: 'ldmi-wipe-stage', 'aria-hidden': 'true' },
+				el( 'img', { className: 'ldmi-wipe-a', src: props.a, alt: '' } ),
+				el( 'img', { className: 'ldmi-wipe-b', src: props.b, alt: '' } ),
+				el( 'span', { className: 'ldmi-wipe-handle' } ),
+				el( 'span', { className: 'ldmi-wipe-tag is-a' }, cfg.baseLabel ),
+				el( 'span', { className: 'ldmi-wipe-tag is-b' }, cfg.altLabel )
+			),
+			el( 'label', { className: 'ldmi-wipe-label', htmlFor: id }, cfg.wipeLabel ),
+			el( 'input', {
+				id: id,
+				className: 'ldmi-wipe-range',
+				type: 'range',
+				min: 0,
+				max: 100,
+				step: 1,
+				value: pos,
+				'aria-valuetext': ( cfg.wipeValue || '%d' ).replace( '%d', String( 100 - pos ) ).replace( '%%', '%' ),
+				onChange: function ( e ) {
+					setPos( parseInt( e.target.value, 10 ) || 0 );
+				}
+			} )
+		);
+	}
+
+	var wipeCount = 0;
+
 	function Comparison( props ) {
 		var regular = props.regular;
 		var second = props.second;
@@ -62,9 +103,16 @@
 					( cfg.ratioWarning || '' ).replace( '%1$s', a.w + ' × ' + a.h ).replace( '%2$s', b.w + ' × ' + b.h ) )
 				: el( 'p', { className: 'ldmi-ratio-ok' }, el( 'span', { className: 'dashicons dashicons-yes', 'aria-hidden': 'true' } ), cfg.ratioOk );
 		}
+		var uid = wp.element.useState( function () {
+			wipeCount += 1;
+			return wipeCount;
+		} )[ 0 ];
+		var urlA = previewUrl( regular );
+		var urlB = previewUrl( second );
 		return el(
 			Fragment,
 			null,
+			urlA && urlB ? el( Wipe, { a: urlA, b: urlB, uid: uid } ) : null,
 			el(
 				'div',
 				{ className: 'ldmi-compare' },

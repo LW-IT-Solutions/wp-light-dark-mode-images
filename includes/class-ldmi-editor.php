@@ -62,6 +62,9 @@ class LDMI_Editor {
 			/* translators: 1: size of the regular image, 2: size of the second image, both like "1200 × 675". */
 			'ratioWarning'  => __( 'The two images have different aspect ratios (%1$s and %2$s). The second image may look stretched or shift the layout; use the same proportions.', 'light-dark-mode-images' ),
 			'ratioOk'       => __( 'Same aspect ratio as the regular image.', 'light-dark-mode-images' ),
+			'wipeLabel'     => __( 'Compare: move the slider to wipe between the two images', 'light-dark-mode-images' ),
+			/* translators: %d: share of the second image in per cent. */
+			'wipeValue'     => __( '%d %% second image', 'light-dark-mode-images' ),
 		);
 	}
 
@@ -118,7 +121,24 @@ class LDMI_Editor {
 		$labels = self::labels();
 		$id     = (int) get_post_meta( $post->ID, LDMI_Output::META, true );
 		wp_nonce_field( 'ldmi_save', 'ldmi_nonce' );
+		$regular = (int) get_post_thumbnail_id( $post );
+		$dims    = function ( $image ) {
+			$meta = $image ? wp_get_attachment_metadata( $image ) : false;
+			return is_array( $meta ) && ! empty( $meta['width'] ) && ! empty( $meta['height'] ) ? array( (int) $meta['width'], (int) $meta['height'] ) : array( 0, 0 );
+		};
+		$rd      = $dims( $regular );
+		$sd      = $dims( LDMI_Output::is_image( $id ) ? $id : 0 );
 		echo '<div class="ldmi-box">';
+		// Sizes of the original files for the aspect ratio check; the script draws the pair from them.
+		printf(
+			'<div class="ldmi-pair" data-regular="%1$d" data-regular-src="%2$s" data-regular-w="%3$d" data-regular-h="%4$d" data-second-w="%5$d" data-second-h="%6$d" hidden></div>',
+			(int) $regular,
+			esc_url( $regular ? (string) wp_get_attachment_image_url( $regular, 'medium' ) : '' ),
+			(int) $rd[0],
+			(int) $rd[1],
+			(int) $sd[0],
+			(int) $sd[1]
+		);
 		echo '<div class="ldmi-preview">';
 		if ( LDMI_Output::is_image( $id ) ) {
 			echo wp_kses_post( wp_get_attachment_image( $id, 'medium', false, array( 'class' => 'ldmi-preview-image' ) ) );
@@ -179,6 +199,7 @@ class LDMI_Editor {
 		// The preview sits on a background of the scheme it is made for, so a dark image is judged on dark.
 		$swatch = 'dark' === LDMI_Settings::alt_scheme() ? '#111827' : '#f8fafc';
 		wp_add_inline_style( 'ldmi-metabox', '#ldmi-featured .ldmi-preview-image{max-width:100%;height:auto;display:block}#ldmi-featured .ldmi-preview:not(:empty){margin-bottom:8px;padding:6px;border:1px solid #c3c4c7;border-radius:4px;background:' . $swatch . '}' );
+		wp_enqueue_style( 'ldmi-metabox-pair', plugins_url( 'assets/metabox.css', LDMI_FILE ), array(), LDMI_VERSION );
 		wp_enqueue_script( 'ldmi-metabox', plugins_url( 'assets/metabox.js', LDMI_FILE ), array( 'jquery' ), LDMI_VERSION, true );
 		wp_localize_script( 'ldmi-metabox', 'LDMI_BOX', self::labels() );
 	}

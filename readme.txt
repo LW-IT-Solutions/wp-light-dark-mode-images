@@ -4,7 +4,7 @@ Tags: dark mode, images, featured image, prefers-color-scheme, picture
 Requires at least: 6.5
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,15 @@ The regular images are shown as before. The block attribute stays in the content
 3. Settings under Settings > Media: base color scheme and optional selectors for a theme switch.
 
 == Changelog ==
+
+= 0.3.0 =
+* Settings > Media: "Preview as" switches the example screens between this device, light and dark mode and names the image a visitor in that mode gets.
+* The example screens show a real pair of images from a recent post, when one exists.
+* New coverage figures: how many featured images and Image blocks of the latest 200 published posts and pages have a second image, as rings with the share.
+* A list of recent posts still without a second image, each with a link to its editor; a check mark when every image has one.
+* Block editor: a slider wipes between the regular and the second image, each on the background of its color scheme.
+* Classic editor: the meta box shows the regular and the second featured image side by side and checks their aspect ratios.
+* No change to the output of the front end or to what is stored.
 
 = 0.2.0 =
 * Settings > Media: two small example screens show which image visitors get in light and in dark mode, and follow the chosen base scheme right away.

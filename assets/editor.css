@@ -74,3 +74,103 @@
 .ldmi-help.components-base-control__help {
 	margin-top: 8px;
 }
+
+/* 0.3.0: wipe between the regular and the second image. */
+.ldmi-wipe {
+	--ldmi-bg-light: #f8fafc;
+	--ldmi-bg-dark: #111827;
+	margin-bottom: 12px;
+}
+
+.ldmi-wipe-stage {
+	position: relative;
+	overflow: hidden;
+	height: 120px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+.ldmi-wipe.is-base-light .ldmi-wipe-stage {
+	background: linear-gradient(to right, var(--ldmi-bg-light) var(--ldmi-pos), var(--ldmi-bg-dark) var(--ldmi-pos));
+}
+
+.ldmi-wipe.is-base-dark .ldmi-wipe-stage {
+	background: linear-gradient(to right, var(--ldmi-bg-dark) var(--ldmi-pos), var(--ldmi-bg-light) var(--ldmi-pos));
+}
+
+.ldmi-wipe-stage img {
+	position: absolute;
+	inset: 6px;
+	width: calc(100% - 12px);
+	height: calc(100% - 12px);
+	object-fit: contain;
+}
+
+.ldmi-wipe-a {
+	clip-path: inset(0 calc(100% - var(--ldmi-pos)) 0 0);
+}
+
+.ldmi-wipe-b {
+	clip-path: inset(0 0 0 var(--ldmi-pos));
+}
+
+.ldmi-wipe-handle {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: var(--ldmi-pos);
+	width: 2px;
+	margin-left: -1px;
+	background: var(--wp-admin-theme-color, #3858e9);
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+.ldmi-wipe-handle::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 16px;
+	height: 16px;
+	margin: -8px 0 0 -8px;
+	border: 2px solid #fff;
+	border-radius: 50%;
+	background: var(--wp-admin-theme-color, #3858e9);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.ldmi-wipe-tag {
+	position: absolute;
+	bottom: 4px;
+	padding: 0 6px;
+	border-radius: 3px;
+	background: rgba(0, 0, 0, 0.6);
+	color: #fff;
+	font-size: 10px;
+	line-height: 16px;
+}
+
+.ldmi-wipe-tag.is-a {
+	left: 4px;
+}
+
+.ldmi-wipe-tag.is-b {
+	right: 4px;
+}
+
+.ldmi-wipe-label {
+	display: block;
+	margin: 8px 0 2px;
+	font-size: 11px;
+}
+
+.ldmi-wipe-range {
+	width: 100%;
+	margin: 0;
+	accent-color: var(--wp-admin-theme-color, #3858e9);
+}
+
+.ldmi-wipe-range:focus-visible {
+	outline: 2px solid var(--wp-admin-theme-color, #3858e9);
+	outline-offset: 2px;
+}
