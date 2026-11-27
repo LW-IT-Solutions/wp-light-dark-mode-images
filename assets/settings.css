@@ -302,9 +302,10 @@
 	transform: translateY(-2px);
 }
 
+/* 0.3.1: no opacity, so the dark screen keeps its contrast instead of turning grey */
 .ldmi-demo-screen.is-dimmed {
-	opacity: 0.6;
-	filter: saturate(0.5);
+	filter: saturate(0.7);
+	transform: scale(0.97);
 }
 
 .ldmi-demo-image.has-photo {

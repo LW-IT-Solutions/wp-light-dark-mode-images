@@ -4,7 +4,7 @@ Tags: dark mode, images, featured image, prefers-color-scheme, picture
 Requires at least: 6.5
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 0.3.0
+Stable tag: 0.3.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,9 @@ The regular images are shown as before. The block attribute stays in the content
 3. Settings under Settings > Media: base color scheme and optional selectors for a theme switch.
 
 == Changelog ==
+
+= 0.3.1 =
+* Settings > Media: in "Preview as" the screen that is not shown keeps its contrast; it is only slightly smaller and less colourful instead of greyed out.
 
 = 0.3.0 =
 * Settings > Media: "Preview as" switches the example screens between this device, light and dark mode and names the image a visitor in that mode gets.
